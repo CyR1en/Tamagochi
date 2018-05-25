@@ -5,7 +5,8 @@ import java.io.IOException;
 import java.net.URL;
 
 public enum SFX {
-    BUTTON_HOVER("/sounds/sfx/button-hover.wav");       // bullet
+    BUTTON_HOVER("/sounds/sfx/button-hover.wav"),
+    BUTTON_CLICK("/sounds/sfx/button-click.wav");
 
     // Nested class for specifying volume
     public static enum Volume {

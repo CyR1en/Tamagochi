@@ -3,6 +3,7 @@ package com.cyr1en.cgdl.GameState;
 import com.cyr1en.cgdl.Handlers.GameStateManager;
 
 import java.awt.*;
+import java.io.Serializable;
 
 /**
  * Super class of all the states of the game
@@ -11,7 +12,7 @@ import java.awt.*;
  * @version 1.0
  * @since 2016-05-17
  */
-public abstract class GameState {
+public abstract class GameState implements Serializable {
 
     protected GameStateManager gsm;
     protected float interpolation;

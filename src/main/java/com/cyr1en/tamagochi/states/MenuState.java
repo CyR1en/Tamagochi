@@ -49,7 +49,7 @@ public class MenuState extends GameState {
         interpolation = 0;
         currentChoice = -1;
         clip = new SoundClip("/sounds/bg-music.wav", Clip.LOOP_CONTINUOUSLY);
-        title = new Title("TAMAGOCHI");
+        title = new Title("TOMOGUCCI");
         title.setColor(new Color(40, 50, 55, 245));
 
         bg = new BackGround("/assets/bg2.png");
@@ -99,7 +99,7 @@ public class MenuState extends GameState {
                 options[i].playHover();
             } else {
                 options[i].setHover(false);
-                options[i].setPlayed(false);
+                options[i].setPlayedHover(false);
             }
         }
 
@@ -163,12 +163,14 @@ public class MenuState extends GameState {
         if (currentChoice == 0) {
             //nextState = StateManager.PLAYING_STATE;
             clip.stop();
+            options[currentChoice].playClick();
             fadeInTimer = -1;
             fadeOutTimer = 0;
         }
         if (currentChoice == 1) {
             //nextState = StateManager.CREDIT_STATE;
             clip.stop();
+            options[currentChoice].playClick();
             fadeInTimer = -1;
             fadeOutTimer = 0;
         }
