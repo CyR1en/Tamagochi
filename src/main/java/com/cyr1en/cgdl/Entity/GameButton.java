@@ -127,7 +127,7 @@ public class GameButton {
             if (type == CENTER) {
                 g.setColor(c.darker());
                 g.setFont(new Font(font.getName(), Font.BOLD, font.getSize() + 2));
-                g.drawString(text,( x - (textWidth / 2) - ((int)(font.getSize() * .5))), y + 10);
+                g.drawString(text,( x - (textWidth / 2) - ((int)(font.getSize() * .2))), y + 10);
             } else if (type == LEFT) {
                 g.setColor(new Color(c.getRed(), c.getGreen(), c.getBlue()));
                 g.drawLine(x, y + height / 2 + 4, x + width, y + height / 2 + 4);

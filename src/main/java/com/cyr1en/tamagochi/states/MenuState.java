@@ -46,21 +46,22 @@ public class MenuState extends GameState {
 
     // initialize all the instance variables
     public void init() {
+        interpolation = 0;
         currentChoice = -1;
         clip = new SoundClip("/sounds/bg-music.wav", Clip.LOOP_CONTINUOUSLY);
         title = new Title("TAMAGOCHI");
-        title.setColor(new Color(40, 50, 55, 200));
+        title.setColor(new Color(40, 50, 55, 245));
 
-        bg = new BackGround();
-        bg.setVector(-0.9, 0);
+        bg = new BackGround("/assets/bg2.png");
+        bg.setVector(-1, 0);
 
         options = new TButton[2];
         options[0] = new TButton(GamePanel.WIDTH / 2, (int) (GamePanel.HEIGHT * 0.6));
-        options[0].setText(" BUTTON ONE ", new Font("Fira Code Retina Medium", Font.PLAIN, 30));
+        options[0].setText("New Game", new Font("Fira Code Retina Medium", Font.PLAIN, 30));
         options[0].setColor(GameButton.DEFAULT_COLOR);
         options[0].setType(GameButton.CENTER);
         options[1] = new TButton(GamePanel.WIDTH / 2, (int) (GamePanel.HEIGHT * 0.6) + 50);
-        options[1].setText(" BUTTON TWO ", new Font("Fira Code Retina Medium", Font.PLAIN, 30));
+        options[1].setText("Load Game", new Font("Fira Code Retina Medium", Font.PLAIN, 30));
         options[1].setColor(GameButton.DEFAULT_COLOR);
         options[1].setType(GameButton.CENTER);
 
@@ -131,7 +132,7 @@ public class MenuState extends GameState {
 
     // draws the menu state
     public void draw(Graphics2D g) {
-        bg.draw(g); //draw the background
+        bg.draw(g, getInterpolation()); //draw the background
 
         //draw each gameButton
         for (GameButton button : options) {
@@ -139,11 +140,11 @@ public class MenuState extends GameState {
         }
 
         //draw the title
-        title.draw(g);
+        title.draw(g, getInterpolation());
 
         //draws all the particles
         for (Particle p : particles)
-            p.draw(g);
+            p.draw(g, getInterpolation());
 
         if (fadeInTimer >= 0) {
             g.setColor(new Color(255, 255, 255, 255 - alpha));
@@ -199,5 +200,15 @@ public class MenuState extends GameState {
             currentChoice = -1;
         }
 
+    }
+
+    @Override
+    public void setInterpolation(float interpolation) {
+        this.interpolation = interpolation;
+    }
+
+    @Override
+    public float getInterpolation() {
+        return interpolation;
     }
 }

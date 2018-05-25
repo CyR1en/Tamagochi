@@ -50,9 +50,11 @@ public abstract class GameStateManager {
      * draw method takes care of graphics of each game state
      * @param g graphics component that's needed to paint something onto the screen
      */
-    public void draw(Graphics2D g) {
-        if(gameState != null)
+    public void draw(Graphics2D g, float interp) {
+        if(gameState != null) {
+            gameState.setInterpolation(interp);
             gameState.draw(g);
+        }
         else {
             g.setColor(Color.BLACK);
             g.fillRect(0, 0, GamePanel.WIDTH, GamePanel.HEIGHT);

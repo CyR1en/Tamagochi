@@ -17,15 +17,17 @@ public class BackGround {
     //Coordinate
     private double x;
     private double y;
+    private double lastX;
+    private double lastY;
 
     //vector
     private double dx;
     private double dy;
 
     //very straight forward constructor
-    public BackGround() {
+    public BackGround(String fileName) {
         //used the ImageLoader class from the CGDL(thanks to ethan)
-        image = ImageLoader.load("/assets/bg2.png");
+        image = ImageLoader.load(fileName);
         //initialize the coordinate of the BG to (0,0)
         x = 0;
         y = 0;
@@ -39,34 +41,42 @@ public class BackGround {
 
     //updates the background
     public void update() {
+        lastX = x;
+        lastY = y;
         x += dx;
         y += dy;
-        if (x + image.getWidth() <= 0 || x >= GamePanel.WIDTH)
+        if (x + image.getWidth() <= 0 || x >= GamePanel.WIDTH) {
+            lastX = 0;
             x = 0;
-        if (y + image.getWidth() <= 0 || y >= GamePanel.HEIGHT)
+        }
+        if (y + image.getWidth() <= 0 || y >= GamePanel.HEIGHT) {
+            lastY = 0;
             y = 0;
+        }
     }
 
     //draws the background
-    public void draw(Graphics2D g) {
+    public void draw(Graphics2D g, float interpolation) {
+        int x = (int)((this.x - lastX) * interpolation + lastX);
+        int y = (int)((this.y - lastY) * interpolation + lastY);
         //center
-        g.drawImage(image, (int) x, (int) y, null);
+        g.drawImage(image, x, y, null);
         //right
-        g.drawImage(image, (int) x + image.getWidth(), (int) y, null);
+        g.drawImage(image, x + image.getWidth(), y, null);
         //left
-        g.drawImage(image, (int) x - image.getWidth(), (int) y, null);
+        //g.drawImage(image, x - image.getWidth(), y, null);
         //top
-        g.drawImage(image, (int) x, (int) y - image.getHeight(), null);
+        //g.drawImage(image, x, y - image.getHeight(), null);
         //bottom
-        g.drawImage(image, (int) x, (int) y + image.getHeight(), null);
+        //g.drawImage(image, x, y + image.getHeight(), null);
         //top-left
-        g.drawImage(image, (int) x - image.getWidth(), (int) y - image.getHeight(), null);
+        //g.drawImage(image, x - image.getWidth(), y - image.getHeight(), null);
         //top-right
-        g.drawImage(image, (int) x + image.getWidth(), (int) y - image.getHeight(), null);
+       // g.drawImage(image, x + image.getWidth(), y - image.getHeight(), null);
         //bottom-left
-        g.drawImage(image, (int) x - image.getWidth(), (int) y + image.getHeight(), null);
+       // g.drawImage(image, x - image.getWidth(), y + image.getHeight(), null);
         //bottom-right
-        g.drawImage(image, (int) x + image.getWidth(), (int) y + image.getHeight(), null);
+        //g.drawImage(image, x + image.getWidth(), y + image.getHeight(), null);
     }
 
 

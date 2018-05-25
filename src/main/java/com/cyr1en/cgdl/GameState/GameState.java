@@ -14,6 +14,7 @@ import java.awt.*;
 public abstract class GameState {
 
     protected GameStateManager gsm;
+    protected float interpolation;
 
     /**
      * constructor for the GameState
@@ -48,5 +49,9 @@ public abstract class GameState {
      * methods to handle all that inputs in this state
      */
     public abstract void handleInput();
+
+    public abstract void setInterpolation(float interpolation);
+
+    public abstract float getInterpolation();
 
 }

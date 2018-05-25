@@ -27,6 +27,7 @@ public class IntroState extends GameState {
     }
 
     public void init() {
+        interpolation = 0;
         ticks = 0;
         logo = ImageLoader.load("/assets/cgdl-logo.png");
         logoH = logo.getHeight();
@@ -70,6 +71,16 @@ public class IntroState extends GameState {
         if (Mouse.isPressed()) {
             gsm.setState(StateManager.MENU_STATE);
         }
+    }
+
+    @Override
+    public void setInterpolation(float interpolation) {
+        this.interpolation = interpolation;
+    }
+
+    @Override
+    public float getInterpolation() {
+        return interpolation;
     }
 
 }

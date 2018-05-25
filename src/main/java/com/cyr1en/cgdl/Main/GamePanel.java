@@ -168,8 +168,8 @@ public class GamePanel extends JPanel implements Runnable, KeyListener, MouseMot
                 }
 
                 //Render. To do so, we need to calculate interpolation for a smooth render.
-                gameDraw();
-
+                float interpolation = Math.min(1.0f, (float) ((now - lastUpdateTime) / TIME_BETWEEN_UPDATES));
+                gameDraw(interpolation);
                 lastRenderTime = now;
                 frameCount++;
 
@@ -214,15 +214,15 @@ public class GamePanel extends JPanel implements Runnable, KeyListener, MouseMot
      * <p>
      * rendering technique is double buffer
      */
-    private void gameRender() {
-        gameStateManager.draw(g);
+    private void gameRender(float interp) {
+        gameStateManager.draw(g, interp);
     }
 
     /**
      * Draw the rendered buffered image to the panel
      */
-    private void gameDraw() {
-        gameRender();
+    private void gameDraw(float interp) {
+        gameRender(interp);
         Graphics g2 = this.getGraphics();
         g2.drawImage(image, 0, 0, null);
         g2.dispose();

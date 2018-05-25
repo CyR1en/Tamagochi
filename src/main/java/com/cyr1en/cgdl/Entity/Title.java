@@ -9,6 +9,8 @@ import java.awt.*;
  */
 public class Title extends GameObject {
 
+    public double targetY;
+
     //String for the title
     private String title;
     private Color color;
@@ -17,6 +19,8 @@ public class Title extends GameObject {
     public Title(String title) {
         this.title = title;
         y = -100;
+        dy = 5;
+        targetY = GamePanel.HEIGHT * 0.23;
     }
 
     public void setColor(Color color) {
@@ -25,17 +29,19 @@ public class Title extends GameObject {
 
     //update the title variables
     public void update() {
-        dy += .08;
+        lastY = y;
+        dy = (targetY - y) / 20;
+        if(dy < 0.001)
+            dy = 0;
         y += dy;
-        if( y > (GamePanel.HEIGHT * 0.2))
-            y = (GamePanel.HEIGHT * 0.2);
     }
 
     //draw the title
-    public void draw(Graphics2D g) {
+    public void draw(Graphics2D g, float interpolation) {
+        int iY = (int) ((y - lastY) * interpolation + lastY - height / 2);
         g.setColor(color);
         g.setFont(new Font(null, Font.BOLD, 60));
         int length = (int) g.getFontMetrics().getStringBounds(title, g).getWidth();
-        g.drawString(title ,GamePanel.WIDTH / 2 - (length / 2), (int)y);
+        g.drawString(title, GamePanel.WIDTH / 2 - (length / 2), iY);
     }
 }

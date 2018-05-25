@@ -55,7 +55,7 @@ public class GameFrame extends JFrame {
             long total = Runtime.getRuntime().totalMemory() / mb;
             long free = Runtime.getRuntime().freeMemory() / mb;
             long used = total - free;
-            this.setTitle( title + " | Max: " + max + "mb Used: " + used + "mb" + " | FPS : " + GamePanel.getFPS() + " | TPS " + GamePanel.getTPS());
+            this.setTitle( title + " | Max: " + max + "mb Used: " + used + "mb" + " | FPS : " + GamePanel.getFPS() + " | TPS: " + GamePanel.getTPS());
         }
     }
 
