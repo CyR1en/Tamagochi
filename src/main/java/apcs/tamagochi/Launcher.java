@@ -17,6 +17,6 @@ public class Launcher {
         GameFrame gameFrame = new GameFrame("Tomogucci", new StateManager(), 200, 60);
         //show debug information on the title bar
         gameFrame.setShowTitleInfo(true);
-        FontUtil.registerAllFonts("/fonts/");
+        FontUtil.registerAllFonts("/fonts/", Launcher.class);
     }
 }
