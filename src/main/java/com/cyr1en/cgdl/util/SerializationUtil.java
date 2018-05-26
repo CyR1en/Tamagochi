@@ -5,11 +5,11 @@ import com.sun.org.apache.bcel.internal.generic.ObjectType;
 import java.io.*;
 
 public class SerializationUtil {
-    private static void serialize(ObjectType YourObject, String filePath) {
+    private static void serialize(ObjectType obj, String filePath) {
         ObjectOutputStream outputStream = null;
         try {
             outputStream = new ObjectOutputStream(new FileOutputStream(filePath));
-            outputStream.writeObject(YourObject);
+            outputStream.writeObject(obj);
         } catch (IOException ex) {
             ex.printStackTrace();
         } finally {

@@ -82,11 +82,9 @@ public class GameButton {
     public void setText(String s, Font f) {
         text = s;
         font = f;
-        AffineTransform at = new AffineTransform();
-        FontRenderContext frc = new FontRenderContext(at, true, true);
-        gv = font.createGlyphVector(frc, text);
-        textWidth = gv.getPixelBounds(null, 0, 0).width;
-        textHeight = gv.getPixelBounds(null, 0, 0).height;
+        Rectangle rect = getPixelBounds(font);
+        textWidth = rect.width;
+        textHeight = rect.height;
         width = textWidth + 20;
         height = textHeight + 10;
     }
@@ -126,8 +124,9 @@ public class GameButton {
             g.setStroke(new BasicStroke(2));
             if (type == CENTER) {
                 g.setColor(c.darker());
-                g.setFont(new Font(font.getName(), Font.BOLD, font.getSize() + 2));
-                g.drawString(text,( x - (textWidth / 2) - ((int)(font.getSize() * .2))), y + 10);
+                Font f = new Font(font.getName(), Font.BOLD, font.getSize() + 2);
+                g.setFont(f);
+                g.drawString(text, x - getPixelBounds(f).width / 2, y + 10);
             } else if (type == LEFT) {
                 g.setColor(new Color(c.getRed(), c.getGreen(), c.getBlue()));
                 g.drawLine(x, y + height / 2 + 4, x + width, y + height / 2 + 4);
@@ -144,12 +143,20 @@ public class GameButton {
             } else if (type == SHOP_BUTTON) {
                 drawShopButton(g);
             }
+            g.setFont(null);
         }
 
         if (active)
             g.setColor(c);
         else
             g.setColor(Color.GRAY);
+    }
+
+    public Rectangle getPixelBounds(Font f) {
+        AffineTransform at = new AffineTransform();
+        FontRenderContext frc = new FontRenderContext(at, true, true);
+        gv = f.createGlyphVector(frc, text);
+        return gv.getPixelBounds(null, 0, 0);
     }
 
 }

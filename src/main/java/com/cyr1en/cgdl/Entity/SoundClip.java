@@ -22,7 +22,7 @@ public class SoundClip {
             // Get a sound clip resource.
             clip = AudioSystem.getClip();
 
-            // Open audio clip and load samples from the audio input stream.
+            // Open audio clip and loadBufferedImage samples from the audio input stream.
             clip.open(audioIn);
             volume = (FloatControl) clip.getControl(FloatControl.Type.MASTER_GAIN);
             volume.setValue(-30.f);

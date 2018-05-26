@@ -1,6 +1,6 @@
 package com.cyr1en.cgdl.Entity;
 
-import com.cyr1en.cgdl.Handlers.ImageLoader;
+import com.cyr1en.cgdl.util.ImageUtil;
 import com.cyr1en.cgdl.Main.GamePanel;
 
 import java.awt.*;
@@ -26,8 +26,8 @@ public class BackGround {
 
     //very straight forward constructor
     public BackGround(String fileName) {
-        //used the ImageLoader class from the CGDL(thanks to ethan)
-        image = ImageLoader.load(fileName);
+        //used the ImageUtil class from the CGDL(thanks to ethan)
+        image = ImageUtil.loadBufferedImage(fileName);
         //initialize the coordinate of the BG to (0,0)
         x = 0;
         y = 0;

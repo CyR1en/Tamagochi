@@ -15,12 +15,15 @@ public class Title extends GameObject {
     private String title;
     private Color color;
 
+    private Font font;
+
     //title constructor
-    public Title(String title) {
+    public Title(String title, Font font) {
         this.title = title;
         y = -100;
         dy = 5;
         targetY = GamePanel.HEIGHT * 0.23;
+        this.font = font;
     }
 
     public void setColor(Color color) {
@@ -40,7 +43,7 @@ public class Title extends GameObject {
     public void draw(Graphics2D g, float interpolation) {
         int iY = (int) ((y - lastY) * interpolation + lastY - height / 2);
         g.setColor(color);
-        g.setFont(new Font(null, Font.BOLD, 60));
+        g.setFont(this.font);
         int length = (int) g.getFontMetrics().getStringBounds(title, g).getWidth();
         g.drawString(title, GamePanel.WIDTH / 2 - (length / 2), iY);
     }

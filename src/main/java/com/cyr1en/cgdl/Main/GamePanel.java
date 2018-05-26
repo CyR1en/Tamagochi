@@ -1,6 +1,6 @@
 package com.cyr1en.cgdl.Main;
 
-import com.cyr1en.cgdl.Handlers.GameStateManager;
+import com.cyr1en.cgdl.GameState.GameStateManager;
 import com.cyr1en.cgdl.Handlers.Keys;
 import com.cyr1en.cgdl.Handlers.Mouse;
 

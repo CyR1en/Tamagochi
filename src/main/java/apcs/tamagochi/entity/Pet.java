@@ -1,4 +1,4 @@
-package com.cyr1en.tamagochi.entity;
+package apcs.tamagochi.entity;
 
 import com.cyr1en.cgdl.Entity.GameObject;
 

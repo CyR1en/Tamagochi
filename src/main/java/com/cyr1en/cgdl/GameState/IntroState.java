@@ -1,11 +1,9 @@
-package com.cyr1en.tamagochi.states;
+package com.cyr1en.cgdl.GameState;
 
-import com.cyr1en.cgdl.GameState.GameState;
-import com.cyr1en.cgdl.Handlers.ImageLoader;
 import com.cyr1en.cgdl.Handlers.Keys;
 import com.cyr1en.cgdl.Handlers.Mouse;
 import com.cyr1en.cgdl.Main.GamePanel;
-import com.cyr1en.tamagochi.handler.StateManager;
+import com.cyr1en.cgdl.util.ImageUtil;
 
 import java.awt.*;
 import java.awt.image.BufferedImage;
@@ -21,15 +19,18 @@ public class IntroState extends GameState {
     private int alpha;
     private int ticks;
 
-    public IntroState(StateManager gsm) {
+    private int nextState;
+
+    public IntroState(GameStateManager gsm, int nextState) {
         super(gsm);
+        this.nextState = nextState;
         init();
     }
 
     public void init() {
         interpolation = 0;
         ticks = 0;
-        logo = ImageLoader.load("/assets/cgdl-logo.png");
+        logo = ImageUtil.loadBufferedImage("/assets/cgdl-logo.png");
         logoH = logo.getHeight();
         logoW = logo.getWidth();
         logoX = (GamePanel.WIDTH - logoW) / 2;
@@ -52,7 +53,7 @@ public class IntroState extends GameState {
                 alpha = 255;
         }
         if (ticks > FADE_IN + LENGTH + FADE_OUT) {
-            gsm.setState(StateManager.MENU_STATE);
+            gsm.setState(nextState);
         }
     }
 
@@ -66,10 +67,10 @@ public class IntroState extends GameState {
 
     public void handleInput() {
         if (Keys.isPressed(Keys.ENTER)) {
-            gsm.setState(StateManager.MENU_STATE);
+            gsm.setState(nextState);
         }
         if (Mouse.isPressed()) {
-            gsm.setState(StateManager.MENU_STATE);
+            gsm.setState(nextState);
         }
     }
 

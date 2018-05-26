@@ -1,14 +1,13 @@
-package com.cyr1en.tamagochi.states;
+package apcs.tamagochi.states;
 
+import apcs.tamagochi.entity.TButton;
+import apcs.tamagochi.enums.SFX;
 import com.cyr1en.cgdl.Entity.*;
 import com.cyr1en.cgdl.GameState.GameState;
-import com.cyr1en.cgdl.Handlers.GameStateManager;
-import com.cyr1en.cgdl.Handlers.Keys;
+import com.cyr1en.cgdl.GameState.GameStateManager;
 import com.cyr1en.cgdl.Handlers.Mouse;
 import com.cyr1en.cgdl.Handlers.ParticleFactory;
 import com.cyr1en.cgdl.Main.GamePanel;
-import com.cyr1en.tamagochi.entity.TButton;
-import com.cyr1en.tamagochi.enums.SFX;
 
 import javax.sound.sampled.Clip;
 import java.awt.*;
@@ -19,6 +18,7 @@ public class MenuState extends GameState {
     // entities/objects
     private BackGround bg;
     private Title title;
+    private SoundClip backgroundMusic;
 
     // game button variables
     private int currentChoice;
@@ -36,33 +36,49 @@ public class MenuState extends GameState {
 
     private int nextState;
 
-    private SoundClip clip;
-
     // constructor
     public MenuState(GameStateManager gsm) {
         super(gsm);
+
         init();
     }
 
     // initialize all the instance variables
     public void init() {
-        interpolation = 0;
         currentChoice = -1;
-        clip = new SoundClip("/sounds/bg-music.wav", Clip.LOOP_CONTINUOUSLY);
-        title = new Title("TOMOGUCCI");
+        //initialize the background music
+        backgroundMusic = new SoundClip("/sounds/bg-music.wav", Clip.LOOP_CONTINUOUSLY);
+
+        //initialize the title.
+        title = new Title("T O M O G U C C I", new Font("Cute Cartoon", Font.BOLD, 70));
+        //setting the color of the title
         title.setColor(new Color(40, 50, 55, 245));
 
+        //initializing the background of the state
         bg = new BackGround("/assets/bg2.png");
+        //setting the vector to (-1,0) so it moves 1 pixels to the left.
         bg.setVector(-1, 0);
 
+        //initializing game buttons
         options = new TButton[2];
+        //========= Button one =========
+        //initialize the first button to be in the center and 60% of the height of the game panel.
         options[0] = new TButton(GamePanel.WIDTH / 2, (int) (GamePanel.HEIGHT * 0.6));
-        options[0].setText("New Game", new Font("Fira Code Retina Medium", Font.PLAIN, 30));
+        //set the text for the button and set its font
+        options[0].setText("New Game", new Font("KG Already Home", Font.PLAIN, 30));
+        //set the color for the button
         options[0].setColor(GameButton.DEFAULT_COLOR);
+        //set the type of the button
         options[0].setType(GameButton.CENTER);
+
+        //========= Button two =========
+        //initialize the first button to be in the center and 60% (with 50 pixel offset from button one) of the height of the game panel.
         options[1] = new TButton(GamePanel.WIDTH / 2, (int) (GamePanel.HEIGHT * 0.6) + 50);
-        options[1].setText("Load Game", new Font("Fira Code Retina Medium", Font.PLAIN, 30));
+        //set the text for the button and set its font
+        options[1].setText("Load Game", new Font("KG Already Home", Font.PLAIN, 30));
+        //set the color for the button
         options[1].setColor(GameButton.DEFAULT_COLOR);
+        //set the type of the button
         options[1].setType(GameButton.CENTER);
 
         fadeInTimer = 0;
@@ -71,13 +87,10 @@ public class MenuState extends GameState {
         fadeOutDelay = 60;
         particles = new ArrayList<>();
         ParticleFactory.init(particles);
-        clip.start();
+        backgroundMusic.start();
         SFX.init();
     }
 
-    public Runnable playEffect(SFX sfx) {
-        return sfx::play;
-    }
     //update all the variables that's used in this class and other components of it
     public void update() {
         handleInput(); // handle the inputs
@@ -162,14 +175,14 @@ public class MenuState extends GameState {
             return;
         if (currentChoice == 0) {
             //nextState = StateManager.PLAYING_STATE;
-            clip.stop();
+            backgroundMusic.stop();
             options[currentChoice].playClick();
             fadeInTimer = -1;
             fadeOutTimer = 0;
         }
         if (currentChoice == 1) {
             //nextState = StateManager.CREDIT_STATE;
-            clip.stop();
+            backgroundMusic.stop();
             options[currentChoice].playClick();
             fadeInTimer = -1;
             fadeOutTimer = 0;
@@ -181,12 +194,7 @@ public class MenuState extends GameState {
         if (Mouse.isPressed()) {
             ParticleFactory.createExplosion(Mouse.x, Mouse.y, new Color(40, 40, 40));
             ParticleFactory.createSmallWave(Mouse.x, Mouse.y, 10, new Color(40, 40, 40));
-            select();
-        }
-
-
-        if (Keys.isPressed(Keys.SPACE)) {
-            currentChoice = 0;
+            SFX.POP.play();
             select();
         }
 

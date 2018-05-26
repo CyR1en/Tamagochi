@@ -1,7 +1,5 @@
 package com.cyr1en.cgdl.GameState;
 
-import com.cyr1en.cgdl.Handlers.GameStateManager;
-
 import java.awt.*;
 import java.io.Serializable;
 
@@ -25,6 +23,7 @@ public abstract class GameState implements Serializable {
      */
     public GameState(GameStateManager gsm) {
         this.gsm = gsm;
+        interpolation = 0;
     }
 
     /**

@@ -92,8 +92,10 @@ public class Particle extends GameObject {
      *          for this class
      */
     public void draw(Graphics2D g, float interpolation) {
+        int interpolatedX = (int)((x - lastX) * interpolation + lastX - width / 2);
+        int interpolatedY = (int)((y - lastY) * interpolation + lastY - height / 2);
         g.setColor(color);
-        g.drawOval((int) x - width / 2, (int) y - height / 2, width, height);
+        g.drawOval(interpolatedX - width / 2, interpolatedY - height / 2, width, height);
     }
 
 }

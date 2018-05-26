@@ -1,16 +1,27 @@
 plugins {
     id 'java'
+    id'application'
 }
 
 group 'apcs'
 version '1.0-SNAPSHOT'
+mainClassName = 'apcs.tamagochi.Launcher'
 
 sourceCompatibility = 1.8
 
 repositories {
     mavenCentral()
+    maven { url 'https://jitpack.io' }
 }
 
 dependencies {
-    testCompile group: 'junit', name: 'junit', version: '4.12'
+
+}
+
+jar {
+    baseName = project.name
+    manifest {
+        attributes 'Implementation-Version': version
+        attributes 'Main-Class': mainClassName
+    }
 }

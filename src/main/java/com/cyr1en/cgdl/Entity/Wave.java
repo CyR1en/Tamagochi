@@ -58,7 +58,8 @@ public class Wave extends Particle {
      * @param g Graphics2D component to paint the wave
      */
     public void draw(Graphics2D g, float interpolation) {
+        g.setColor(color);
         g.setStroke(new BasicStroke(2));
-        super.draw(g, interpolation);
+        g.drawOval((int) x - width / 2, (int) y - height / 2, width, height);
     }
 }
