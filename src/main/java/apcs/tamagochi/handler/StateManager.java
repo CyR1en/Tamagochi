@@ -10,7 +10,7 @@ public class StateManager extends GameStateManager {
 
     //constants that we can just call through out the code
     public static final int MENU_STATE = 0;
-
+    public static final int PLAYING_STATE = 1;
     //constructor for the state manager class
     public StateManager() {
         //pass in the initial state of the game, which is state 0

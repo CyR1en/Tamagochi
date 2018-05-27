@@ -2,6 +2,7 @@ package apcs.tamagochi.states;
 
 import apcs.tamagochi.entity.TButton;
 import apcs.tamagochi.enums.SFX;
+import apcs.tamagochi.handler.StateManager;
 import com.cyr1en.cgdl.Entity.*;
 import com.cyr1en.cgdl.GameState.GameState;
 import com.cyr1en.cgdl.GameState.GameStateManager;
@@ -135,12 +136,7 @@ public class MenuState extends GameState {
             alpha = 0;
         if (alpha > 255)
             alpha = 255;
-        /*
-        if (Main.frame.isShowTitleInfo())
-            Main.frame.updateTitleBar();
-        else
-            Main.frame.clearTitleBar();
-            */
+
     }
 
     // draws the menu state
@@ -174,7 +170,7 @@ public class MenuState extends GameState {
         if (fadeOutTimer != -1)
             return;
         if (currentChoice == 0) {
-            //nextState = StateManager.PLAYING_STATE;
+            nextState = StateManager.PLAYING_STATE;
             backgroundMusic.stop();
             options[currentChoice].playClick();
             fadeInTimer = -1;
@@ -198,17 +194,14 @@ public class MenuState extends GameState {
             select();
         }
 
-        boolean hit = false;
+
         for (int i = 0; i < options.length; i++) {
             if (options[i].isHovering(Mouse.x, Mouse.y)) {
                 currentChoice = i;
-                hit = true;
                 break;
             }
         }
-        if (!hit) {
-            currentChoice = -1;
-        }
+
 
     }
 
