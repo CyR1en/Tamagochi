@@ -20,8 +20,6 @@ public class Launcher {
         gameFrame.setShowTitleInfo(true);
         gameFrame.setIconImage(ImageUtil.loadBufferedImage("/assets/icon.png"));
         FontUtil.registerAllFonts("/fonts/", Launcher.class);
-        //Hi Ethanooool
-        //Hi Yeeun
-        //NYE.
+
     }
 }
