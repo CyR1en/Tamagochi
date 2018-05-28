@@ -118,6 +118,7 @@ public class MenuState extends GameState {
             p.draw(g, getInterpolation());
 
         transition.draw(g, getInterpolation());
+
     }
 
     public void handleInput() {
