@@ -61,7 +61,7 @@ public class MenuState extends GameState {
         newGameButton.setObjType(this);
         newGameButton.setOnClick(state -> {
             state.getBackgroundMusic().stop();
-            transition.nextState(StateManager.MENU_STATE);
+            transition.nextState(StateManager.PLAYING_STATE);
         });
 
         //========= Button two =========
