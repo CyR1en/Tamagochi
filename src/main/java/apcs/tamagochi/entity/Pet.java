@@ -8,8 +8,9 @@ import com.cyr1en.cgdl.util.ImageUtil;
 
 import java.awt.*;
 import java.awt.image.BufferedImage;
+import java.io.Serializable;
 
-public class Pet extends GameObject {
+public class Pet extends GameObject implements Serializable {
     private final int MAX_HEALTH = 100;
     private final int MAX_FULL = 100;
     private final int MAX_ENJOYMENT = 100;
@@ -19,7 +20,7 @@ public class Pet extends GameObject {
     public static final int HAPPY = 1;
     public static final int MAD = 2;
 
-    private Animation animation;
+    private transient Animation animation;
 
     //health
     private int health;
@@ -121,7 +122,6 @@ public class Pet extends GameObject {
     public void setFollow(boolean follow) {
         this.follow = follow;
     }
-
 
     @Override
     public void draw(Graphics2D g, float interpolation) {
