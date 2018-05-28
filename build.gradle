@@ -15,7 +15,7 @@ repositories {
 }
 
 dependencies {
-    compile 'com.github.CyR1en:cgdl:1.1-SNAPSHOT'
+    compile 'com.github.CyR1en:cgdl:1.3-SNAPSHOT'
 }
 
 jar {

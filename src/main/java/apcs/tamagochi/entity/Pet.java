@@ -2,6 +2,8 @@ package apcs.tamagochi.entity;
 
 import com.cyr1en.cgdl.Entity.GameObject;
 
+import java.awt.*;
+
 public class Pet extends GameObject {
     //health
     private int health;
@@ -16,4 +18,13 @@ public class Pet extends GameObject {
     private int maxEnjoyment;
 
 
+    @Override
+    public void update() {
+
+    }
+
+    @Override
+    public void draw(Graphics2D g, float interpolation) {
+
+    }
 }

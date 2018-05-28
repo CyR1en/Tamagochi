@@ -1,7 +1,7 @@
 package apcs.tamagochi.handler;
 
-import com.cyr1en.cgdl.GameState.GameStateManager;
 import apcs.tamagochi.states.MenuState;
+import com.cyr1en.cgdl.GameState.GameStateManager;
 
 /**
  * This handles all the switching of the game state

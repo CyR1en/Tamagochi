@@ -1,11 +1,11 @@
 package apcs.tamagochi.states;
 
-import apcs.tamagochi.entity.TButton;
-import apcs.tamagochi.enums.SFX;
 import apcs.tamagochi.handler.StateManager;
 import com.cyr1en.cgdl.Entity.*;
+import com.cyr1en.cgdl.Entity.Button.GameButton;
 import com.cyr1en.cgdl.GameState.GameState;
 import com.cyr1en.cgdl.GameState.GameStateManager;
+import com.cyr1en.cgdl.GameState.Transition;
 import com.cyr1en.cgdl.Handlers.Mouse;
 import com.cyr1en.cgdl.Handlers.ParticleFactory;
 import com.cyr1en.cgdl.Main.GamePanel;
@@ -20,35 +20,26 @@ public class MenuState extends GameState {
     private BackGround bg;
     private Title title;
     private SoundClip backgroundMusic;
+    private Transition transition;
 
     // game button variables
-    private int currentChoice;
-    private TButton[] options;
+    private GameButton<MenuState> newGameButton;
+    private GameButton<MenuState> loadGameButton;
 
     // particles
     private ArrayList<Particle> particles;
 
-    // fade variables
-    private int fadeInTimer;
-    private int fadeInDelay;
-    private int fadeOutTimer;
-    private int fadeOutDelay;
-    private int alpha;
-
-    private int nextState;
-
     // constructor
     public MenuState(GameStateManager gsm) {
         super(gsm);
-
         init();
     }
 
     // initialize all the instance variables
     public void init() {
-        currentChoice = -1;
         //initialize the background music
-        backgroundMusic = new SoundClip("/sounds/bg-music.wav", Clip.LOOP_CONTINUOUSLY);
+        backgroundMusic = new SoundClip("/sounds/bg-music2.wav", Clip.LOOP_CONTINUOUSLY);
+        backgroundMusic.setVolume(0.15f);
 
         //initialize the title.
         title = new Title("T O M O G U C C I", new Font("Cute Cartoon", Font.BOLD, 70));
@@ -60,93 +51,64 @@ public class MenuState extends GameState {
         //setting the vector to (-1,0) so it moves 1 pixels to the left.
         bg.setVector(-1, 0);
 
-        //initializing game buttons
-        options = new TButton[2];
         //========= Button one =========
-        //initialize the first button to be in the center and 60% of the height of the game panel.
-        options[0] = new TButton(GamePanel.WIDTH / 2, (int) (GamePanel.HEIGHT * 0.6));
-        //set the text for the button and set its font
-        options[0].setText("New Game", new Font("KG Already Home", Font.PLAIN, 30));
-        //set the color for the button
-        options[0].setColor(GameButton.DEFAULT_COLOR);
-        //set the type of the button
-        options[0].setType(GameButton.CENTER);
+        newGameButton = new GameButton<>(GamePanel.WIDTH / 2, (int) (GamePanel.HEIGHT * 0.6));
+        newGameButton.setText("New Game ", new Font("KG Already Home", Font.PLAIN, 30));
+        newGameButton.setHoverSound(new SoundEffect("/sounds/sfx/button-hover.wav"));
+        newGameButton.setClickSound(new SoundEffect("/sounds/sfx/button-click.wav"));
+        newGameButton.setColor(GameButton.DEFAULT_COLOR);
+        newGameButton.setType(GameButton.CENTER);
+        newGameButton.setObjType(this);
+        newGameButton.setOnClick(state -> {
+            state.getBackgroundMusic().stop();
+            transition.nextState(StateManager.MENU_STATE);
+        });
 
         //========= Button two =========
-        //initialize the first button to be in the center and 60% (with 50 pixel offset from button one) of the height of the game panel.
-        options[1] = new TButton(GamePanel.WIDTH / 2, (int) (GamePanel.HEIGHT * 0.6) + 50);
-        //set the text for the button and set its font
-        options[1].setText("Load Game", new Font("KG Already Home", Font.PLAIN, 30));
-        //set the color for the button
-        options[1].setColor(GameButton.DEFAULT_COLOR);
-        //set the type of the button
-        options[1].setType(GameButton.CENTER);
+        loadGameButton = new GameButton<>(GamePanel.WIDTH / 2, (int) (GamePanel.HEIGHT * 0.6) + 50);
+        loadGameButton.setText("Load Game", new Font("KG Already Home", Font.PLAIN, 30));
+        loadGameButton.setHoverSound(new SoundEffect("/sounds/sfx/button-hover.wav"));
+        loadGameButton.setClickSound(new SoundEffect("/sounds/sfx/button-click.wav"));
+        loadGameButton.setColor(GameButton.DEFAULT_COLOR);
+        loadGameButton.setType(GameButton.CENTER);
+        loadGameButton.setObjType(this);
+        loadGameButton.setOnClick(state -> {
+            state.getBackgroundMusic().stop();
+            transition.nextState(StateManager.MENU_STATE);
+        });
 
-        fadeInTimer = 0;
-        fadeInDelay = 60;
-        fadeOutTimer = -1;
-        fadeOutDelay = 60;
+        transition = new Transition(gsm ,0, 30, -1, 30);
         particles = new ArrayList<>();
         ParticleFactory.init(particles);
         backgroundMusic.start();
-        SFX.init();
     }
 
-    //update all the variables that's used in this class and other components of it
+    //updateBool all the variables that's used in this class and other components of it
     public void update() {
         handleInput(); // handle the inputs
-        bg.update(); // update the background
-        title.update(); // update the title
-
-        // particles update
+        bg.update(); // updateBool the background
+        title.update(); // updateBool the title
+        // particles updateBool
         for (int i = 0; i < particles.size(); i++) {
-            if (particles.get(i).update()) {
+            if (particles.get(i).updateBool()) {
                 particles.remove(i);
                 i--;
             }
         }
-
-        // game button checker. checks if mouse is hovering over the button and update
-        for (int i = 0; i < options.length; i++) {
-            if (currentChoice == i) {
-                options[i].setHover(true);
-                options[i].playHover();
-            } else {
-                options[i].setHover(false);
-                options[i].setPlayedHover(false);
-            }
-        }
-
-        if (fadeInTimer >= 0) {
-            fadeInTimer++;
-            alpha = (int) (255.0 * fadeInTimer / fadeInDelay);
-            if (fadeInTimer == fadeInDelay) {
-                fadeInTimer = -1;
-            }
-        }
-
-        if (fadeOutTimer >= 0) {
-            fadeOutTimer++;
-            alpha = (int) (255.0 * fadeOutTimer / fadeOutDelay);
-            if (fadeOutTimer == fadeOutDelay) {
-                gsm.setState(nextState);
-            }
-        }
-        if (alpha < 0)
-            alpha = 0;
-        if (alpha > 255)
-            alpha = 255;
-
+        // buttons
+        newGameButton.update();
+        loadGameButton.update();
+        transition.update();
     }
+
 
     // draws the menu state
     public void draw(Graphics2D g) {
         bg.draw(g, getInterpolation()); //draw the background
 
         //draw each gameButton
-        for (GameButton button : options) {
-            button.draw(g);
-        }
+        newGameButton.draw(g, getInterpolation());
+        loadGameButton.draw(g, getInterpolation());
 
         //draw the title
         title.draw(g, getInterpolation());
@@ -155,54 +117,19 @@ public class MenuState extends GameState {
         for (Particle p : particles)
             p.draw(g, getInterpolation());
 
-        if (fadeInTimer >= 0) {
-            g.setColor(new Color(255, 255, 255, 255 - alpha));
-            g.fillRect(0, 0, GamePanel.WIDTH, GamePanel.HEIGHT);
-        }
-        if (fadeOutTimer >= 0) {
-            g.setColor(new Color(255, 255, 255, alpha));
-            g.fillRect(0, 0, GamePanel.WIDTH, GamePanel.HEIGHT);
-        }
-    }
-
-    // handles the selection for the game button
-    private void select() {
-        if (fadeOutTimer != -1)
-            return;
-        if (currentChoice == 0) {
-            nextState = StateManager.PLAYING_STATE;
-            backgroundMusic.stop();
-            options[currentChoice].playClick();
-            fadeInTimer = -1;
-            fadeOutTimer = 0;
-        }
-        if (currentChoice == 1) {
-            //nextState = StateManager.CREDIT_STATE;
-            backgroundMusic.stop();
-            options[currentChoice].playClick();
-            fadeInTimer = -1;
-            fadeOutTimer = 0;
-        }
+        transition.draw(g, getInterpolation());
     }
 
     public void handleInput() {
-        //when mouse is pressed make a cute little fireworks effect
         if (Mouse.isPressed()) {
             ParticleFactory.createExplosion(Mouse.x, Mouse.y, new Color(40, 40, 40));
             ParticleFactory.createSmallWave(Mouse.x, Mouse.y, 10, new Color(40, 40, 40));
-            SFX.POP.play();
-            select();
+            new SoundEffect("/sounds/sfx/pop.wav").play();
         }
+    }
 
-
-        for (int i = 0; i < options.length; i++) {
-            if (options[i].isHovering(Mouse.x, Mouse.y)) {
-                currentChoice = i;
-                break;
-            }
-        }
-
-
+    public SoundClip getBackgroundMusic() {
+        return backgroundMusic;
     }
 
     @Override

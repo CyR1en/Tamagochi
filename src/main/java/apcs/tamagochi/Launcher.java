@@ -4,7 +4,6 @@ import apcs.tamagochi.handler.StateManager;
 import com.cyr1en.cgdl.Main.GameFrame;
 import com.cyr1en.cgdl.Main.GamePanel;
 import com.cyr1en.cgdl.util.FontUtil;
-import com.cyr1en.cgdl.util.ImageUtil;
 
 public class Launcher {
     public static void main(String[] args) {
@@ -18,8 +17,7 @@ public class Launcher {
         GameFrame gameFrame = new GameFrame("Tomogucci", new StateManager(), 200, 60);
         //show debug information on the title bar
         gameFrame.setShowTitleInfo(true);
-        gameFrame.setIconImage(ImageUtil.loadBufferedImage("/assets/icon.png"));
+        //registering all fonts in the fonts directory
         FontUtil.registerAllFonts("/fonts/", Launcher.class);
-
     }
 }
