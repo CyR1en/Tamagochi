@@ -29,9 +29,10 @@ public class PlayingState extends GameState {
     private ArrayList<Food> foods;
 
     private GameButton<PlayingState> feedButton;
+    private GameButton<PlayingState> playButton;
+
     private GameButton<PlayingState> saveButton;
     private GameButton<PlayingState> homeButton;
-
 
 
     public PlayingState(GameStateManager gsm, Pet pet) {
@@ -53,16 +54,23 @@ public class PlayingState extends GameState {
         foods.add(new Food(50, "Sushi"));
         foods.add(new Food(100, "Pizza"));
 
-        feedButton = new GameButton<>((int) (GamePanel.WIDTH * .15), GamePanel.HEIGHT - 70);
-        feedButton.setText("\uD83C\uDF7D ", new Font("Segoe UI Emoji", Font.PLAIN, 70));
+        feedButton = new GameButton<>((int) (GamePanel.WIDTH * .25), GamePanel.HEIGHT - 70);
+        feedButton.setText("\uD83C\uDF7D", new Font("Segoe UI Emoji", Font.PLAIN, 70));
         feedButton.setHoverSound(new SoundEffect("/sounds/sfx/button-hover.wav"));
         feedButton.setClickSound(new SoundEffect("/sounds/sfx/eat.wav"));
         feedButton.setColor(new Color(224, 1, 107, 255));
         feedButton.setType(GameButton.CENTER);
         feedButton.setObjType(this);
-        feedButton.setOnClick(state -> {
-            feed();
-        });
+        feedButton.setOnClick(state -> pet.feed(foods.get((int) (Math.random() * 3))));
+
+        playButton = new GameButton<>((int) (GamePanel.WIDTH * .75), GamePanel.HEIGHT - 70);
+        playButton.setText("\uD83C\uDFAE", new Font("Segoe UI Emoji", Font.PLAIN, 70));
+        playButton.setHoverSound(new SoundEffect("/sounds/sfx/button-hover.wav"));
+        playButton.setClickSound(new SoundEffect("/sounds/sfx/eat.wav"));
+        playButton.setColor(new Color(224, 1, 107, 255));
+        playButton.setType(GameButton.CENTER);
+        playButton.setObjType(this);
+        playButton.setOnClick(state -> pet.play());
 
         saveButton = new GameButton<>(GamePanel.WIDTH - 20, GamePanel.HEIGHT - (GamePanel.HEIGHT - 15));
         saveButton.setText("\uD83D\uDCBE", new Font("Segoe UI Emoji", Font.PLAIN, 20));
@@ -98,18 +106,20 @@ public class PlayingState extends GameState {
         pet.setPosition(GamePanel.WIDTH / 2, GamePanel.HEIGHT / 2);
     }
 
-    public void feed() {
-        pet.feed(foods.get((int) (Math.random() * 3)));
-    }
-
     @Override
     public void update() {
         handleInput();
         background.update();
         pet.update();
         feedButton.update();
+        if (pet.isDead()) {
+            feedButton.setActive(false);
+            saveButton.setActive(false);
+            playButton.setActive(false);
+        }
         saveButton.update();
         homeButton.update();
+        playButton.update();
         transition.update();
     }
 
@@ -119,6 +129,7 @@ public class PlayingState extends GameState {
         feedButton.draw(g, getInterpolation());
         saveButton.draw(g, getInterpolation());
         homeButton.draw(g, getInterpolation());
+        playButton.draw(g, getInterpolation());
         pet.draw(g, getInterpolation());
         int x = 10;
         int y = 60;
@@ -130,6 +141,12 @@ public class PlayingState extends GameState {
         g.drawString("Enjoyment: " + pet.getEnjoyment(), x, y + (offset * 2));
         g.drawString("Exp: " + pet.getExp() + "/" + pet.getMaxexp(), x, y + (offset * 3));
         g.drawString("Lvl: " + pet.getLvl(), x, y + (offset * 4));
+        if (pet.isDead()) {
+            g.setFont(new Font("YouMurderer BB", Font.BOLD, 80));
+            g.setColor(new Color(176, 0, 3));
+            int length = (int) g.getFontMetrics().getStringBounds("You Ded!", g).getWidth();
+            g.drawString("You Ded!", (GamePanel.WIDTH / 2) - length / 2, GamePanel.HEIGHT / 2);
+        }
         transition.draw(g, getInterpolation());
     }
 

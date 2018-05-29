@@ -32,7 +32,7 @@ public class Pet extends GameObject implements Serializable {
     private transient ScheduledExecutorService scheduler;
 
     //health
-    private int health;
+    private double health;
     //full
     private int full;
     //enjoyment
@@ -49,18 +49,22 @@ public class Pet extends GameObject implements Serializable {
 
     private boolean hatched;
 
+    private boolean isDead;
 
     //initialize the pet based on level
     public Pet(int lvl) {
-        this.health = 10;
+        this.health = 100;
         this.full = 10;
-        this.enjoyment = MAX_ENJOYMENT * (lvl / 10);
+        this.enjoyment = 10;
         this.exp = 0;
         this.lvl = lvl;
         maxexp = INITIAL_EXP * Math.pow(1.5, lvl - 1);
         animation = new Animation();
         scheduler = Executors.newSingleThreadScheduledExecutor();
-        scheduler.scheduleAtFixedRate(this::fullDecay, 0, 1, TimeUnit.SECONDS);
+        scheduler.scheduleAtFixedRate(() -> {
+            fullDecay();
+            enjoymentDecay();
+        }, 0, 10, TimeUnit.SECONDS);
     }
 
     public void setAnimation(int mood) {
@@ -167,22 +171,86 @@ public class Pet extends GameObject implements Serializable {
                 lvl++;
                 maxexp = INITIAL_EXP * Math.pow(1.5, lvl - 1);
             }
-            if (full > MAX_FULL) {
+            if (full < MAX_FULL) {
                 health++;
                 if (health > MAX_HEALTH) {
                     health = MAX_HEALTH;
                 }
+            } else {
                 full = MAX_FULL;
             }
-
         }
     }
 
+    public void play() {
+        System.out.println("feeding");
+        if (!(enjoyment >= MAX_ENJOYMENT)) {
+            enjoyment += ((int) (Math.random() * 20) + 1) * Math.pow(1.5, lvl - 1);
+            exp += ((int) (Math.random() * 3) + 1) * Math.pow(1.5, lvl - 1);
+            if (enjoyment < MAX_ENJOYMENT) {
+                health++;
+                if (health > MAX_HEALTH) {
+                    health = MAX_HEALTH;
+                }
+            } else {
+                enjoyment = MAX_ENJOYMENT;
+            }
+            if (exp >= maxexp) {
+                exp = 0;
+                lvl++;
+                maxexp = INITIAL_EXP * Math.pow(1.5, lvl - 1);
+            }
+        }
+    }
+
+
     public void fullDecay() {
         if (full < 1) {
-            health--;
+            health = health - (int) (Math.random() * 25 + 1);
+            if (health < 1) {
+                health = 0;
+                if (!isDead) {
+                    BufferedImage fullImg = ImageUtil.loadBufferedImage("/assets/sprites/pendead.png");
+                    width = height = 300;
+                    int row = 1;
+                    int col = 2;
+                    BufferedImage[] frames = new BufferedImage[row * col];
+                    for (int j = 0; j < col; j++) {
+                        frames[j] = fullImg.getSubimage(j * width, 0, width, height);
+                    }
+                    animation.setFrames(frames);
+                    isDead = true;
+                }
+            }
         } else {
-            full--;
+            full = full - (int) (Math.random() * 25 + 1);
+            if (full < 0)
+                full = 0;
+        }
+    }
+
+    public void enjoymentDecay() {
+        if (enjoyment < 1) {
+            health = health - (int) (Math.random() * 25 + 1);
+            if (health < 1) {
+                health = 0;
+                if (!isDead) {
+                    BufferedImage fullImg = ImageUtil.loadBufferedImage("/assets/sprites/pendead.png");
+                    width = height = 300;
+                    int row = 1;
+                    int col = 2;
+                    BufferedImage[] frames = new BufferedImage[row * col];
+                    for (int j = 0; j < col; j++) {
+                        frames[j] = fullImg.getSubimage(j * width, 0, width, height);
+                    }
+                    animation.setFrames(frames);
+                    isDead = true;
+                }
+            }
+        } else {
+            enjoyment = enjoyment - (int) (Math.random() * 25 + 1);
+            if (enjoyment < 0)
+                enjoyment = 0;
         }
     }
 
@@ -212,7 +280,7 @@ public class Pet extends GameObject implements Serializable {
         }
         lastX = x;
         lastY = y;
-        if (follow) {
+        if (follow && !isDead) {
             if (x < Mouse.x) {
                 x += 2;
             }
@@ -240,11 +308,11 @@ public class Pet extends GameObject implements Serializable {
     }
 
 
-    public int getHealth() {
+    public double getHealth() {
         return health;
     }
 
-    public void setHealth(int health) {
+    public void setHealth(double health) {
         this.health = health;
     }
 
@@ -296,6 +364,22 @@ public class Pet extends GameObject implements Serializable {
         this.scheduler = scheduler;
     }
 
+    public boolean isHatched() {
+        return hatched;
+    }
+
+    public void setHatched(boolean hatched) {
+        this.hatched = hatched;
+    }
+
+    public boolean isDead() {
+        return isDead;
+    }
+
+    public void setDead(boolean dead) {
+        isDead = dead;
+    }
+
     @Override
     public void draw(Graphics2D g, float interpolation) {
         BufferedImage img = animation.getImage();
@@ -311,6 +395,9 @@ public class Pet extends GameObject implements Serializable {
         in.defaultReadObject();
         animation = new Animation();
         scheduler = Executors.newSingleThreadScheduledExecutor();
-        scheduler.scheduleAtFixedRate(this::fullDecay, 0, 1, TimeUnit.SECONDS);
+        scheduler.scheduleAtFixedRate(() -> {
+            fullDecay();
+            enjoymentDecay();
+        }, 0, 10, TimeUnit.SECONDS);
     }
 }
