@@ -4,7 +4,7 @@ import java.awt.image.BufferedImage;
 
 public class Test {
     public static void main(String[] args) {
-        BufferedImage image = ImageUtil.loadBufferedImage("/assets/penbabydf.png");
+        BufferedImage image = ImageUtil.loadBufferedImage("/assets/sprites/penbabydf.png");
 
     }
 }

@@ -2,6 +2,7 @@ package apcs.tamagochi.states;
 
 import apcs.tamagochi.entity.Food;
 import apcs.tamagochi.entity.Pet;
+import apcs.tamagochi.handler.StateManager;
 import com.cyr1en.cgdl.Entity.BackGround;
 import com.cyr1en.cgdl.Entity.Button.GameButton;
 import com.cyr1en.cgdl.Entity.SoundClip;
@@ -29,9 +30,12 @@ public class PlayingState extends GameState {
 
     private GameButton<PlayingState> feedButton;
     private GameButton<PlayingState> saveButton;
+    private GameButton<PlayingState> homeButton;
 
-    public PlayingState(GameStateManager gsm) {
+
+    public PlayingState(GameStateManager gsm, Pet pet) {
         super(gsm);
+        this.pet = pet;
         init();
     }
 
@@ -42,28 +46,27 @@ public class PlayingState extends GameState {
         backgroundMusic.start();
 
         background = new BackGround("/assets/defaultbg.png");
-        transition = new Transition(gsm, 0, 30, -1, 30);
+        transition = new Transition(gsm, 0, 30, -1, 60);
         foods = new ArrayList<>();
         foods.add(new Food(10, "Salad"));
         foods.add(new Food(50, "Sushi"));
         foods.add(new Food(100, "Pizza"));
 
-        feedButton = new GameButton<>((int) (GamePanel.WIDTH * .20), GamePanel.HEIGHT - 100);
-        feedButton.setText("\uD83C\uDF7D ", new Font("Segoe UI Emoji", Font.PLAIN, 80));
+        feedButton = new GameButton<>((int) (GamePanel.WIDTH * .15), GamePanel.HEIGHT - 70);
+        feedButton.setText("\uD83C\uDF7D ", new Font("Segoe UI Emoji", Font.PLAIN, 70));
         feedButton.setHoverSound(new SoundEffect("/sounds/sfx/button-hover.wav"));
         feedButton.setClickSound(new SoundEffect("/sounds/sfx/eat.wav"));
-        feedButton.setColor(new Color(224, 128, 151, 255));
+        feedButton.setColor(new Color(224, 1, 107, 255));
         feedButton.setType(GameButton.CENTER);
         feedButton.setObjType(this);
         feedButton.setOnClick(state -> {
             feed();
         });
 
-        saveButton = new GameButton<>(GamePanel.WIDTH - 100, GamePanel.HEIGHT - (GamePanel.HEIGHT - 100));
-        saveButton.setText("\uD83D\uDCBE", new Font("Segoe UI Emoji", Font.PLAIN, 40));
+        saveButton = new GameButton<>(GamePanel.WIDTH - 20, GamePanel.HEIGHT - (GamePanel.HEIGHT - 15));
+        saveButton.setText("\uD83D\uDCBE", new Font("Segoe UI Emoji", Font.PLAIN, 20));
         saveButton.setHoverSound(new SoundEffect("/sounds/sfx/button-hover.wav"));
         saveButton.setClickSound(new SoundEffect("/sounds/sfx/button-click.wav"));
-        saveButton.setColor(GameButton.DEFAULT_COLOR);
         saveButton.setType(GameButton.CENTER);
         saveButton.setObjType(this);
         saveButton.setOnClick(state -> {
@@ -74,13 +77,22 @@ public class PlayingState extends GameState {
             } else {
                 exist = true;
             }
-            System.out.println(exist);
             if(exist) {
                 SerializationUtil.serialize(pet, "saves/save.dat");
             }
         });
 
-        pet = new Pet(1);
+        homeButton = new GameButton<>(15, 15);
+        homeButton.setText("\uD83C\uDFE0", new Font("Segoe UI Emoji", Font.PLAIN, 20));
+        homeButton.setHoverSound(new SoundEffect("/sounds/sfx/button-hover.wav"));
+        homeButton.setClickSound(new SoundEffect("/sounds/sfx/button-click.wav"));
+        homeButton.setType(GameButton.CENTER);
+        homeButton.setObjType(this);
+        homeButton.setOnClick(state -> {
+            backgroundMusic.stop();
+            transition.nextState(StateManager.MENU_STATE);
+        });
+
         pet.setAnimation(Pet.DEFAULT);
         pet.setPosition(GamePanel.WIDTH / 2, GamePanel.HEIGHT / 2);
     }
@@ -91,21 +103,23 @@ public class PlayingState extends GameState {
 
     @Override
     public void update() {
+        handleInput();
         background.update();
-        transition.update();
         pet.update();
         feedButton.update();
         saveButton.update();
+        homeButton.update();
+        transition.update();
     }
 
     @Override
     public void draw(Graphics2D g) {
-        handleInput();
         background.draw(g, getInterpolation());
-        transition.draw(g, getInterpolation());
-        pet.draw(g, getInterpolation());
         feedButton.draw(g, getInterpolation());
         saveButton.draw(g, getInterpolation());
+        homeButton.draw(g, getInterpolation());
+        pet.draw(g, getInterpolation());
+        transition.draw(g, getInterpolation());
     }
 
     @Override
