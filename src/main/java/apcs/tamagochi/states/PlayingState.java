@@ -33,6 +33,7 @@ public class PlayingState extends GameState {
     private GameButton<PlayingState> homeButton;
 
 
+
     public PlayingState(GameStateManager gsm, Pet pet) {
         super(gsm);
         this.pet = pet;
@@ -72,12 +73,12 @@ public class PlayingState extends GameState {
         saveButton.setOnClick(state -> {
             File dir = new File("saves/");
             boolean exist;
-            if(!dir.exists()) {
+            if (!dir.exists()) {
                 exist = dir.mkdirs();
             } else {
                 exist = true;
             }
-            if(exist) {
+            if (exist) {
                 SerializationUtil.serialize(pet, "saves/save.dat");
             }
         });
@@ -98,7 +99,7 @@ public class PlayingState extends GameState {
     }
 
     public void feed() {
-        pet.feed(foods.get((int)(Math.random() * 3)));
+        pet.feed(foods.get((int) (Math.random() * 3)));
     }
 
     @Override
@@ -119,12 +120,22 @@ public class PlayingState extends GameState {
         saveButton.draw(g, getInterpolation());
         homeButton.draw(g, getInterpolation());
         pet.draw(g, getInterpolation());
+        int x = 10;
+        int y = 60;
+        int offset = 32;
+        g.setFont(new Font("Summers Victory Over Spring", Font.BOLD, 30));
+        g.setColor(new Color(0, 0, 0));
+        g.drawString("Health: " + pet.getHealth(), x, y);
+        g.drawString("Full: " + pet.getFull(), x, y + offset);
+        g.drawString("Enjoyment: " + pet.getEnjoyment(), x, y + (offset * 2));
+        g.drawString("Exp: " + pet.getExp() + "/" + pet.getMaxexp(), x, y + (offset * 3));
+        g.drawString("Lvl: " + pet.getLvl(), x, y + (offset * 4));
         transition.draw(g, getInterpolation());
     }
 
     @Override
     public void handleInput() {
-        if(Keys.isPressed(Keys.SPACE)) {
+        if (Keys.isPressed(Keys.SPACE)) {
             boolean follow = !pet.isFollow();
             pet.setFollow(follow);
         }
