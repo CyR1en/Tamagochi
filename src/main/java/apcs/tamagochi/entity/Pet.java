@@ -8,18 +8,23 @@ import com.cyr1en.cgdl.util.ImageUtil;
 
 import java.awt.*;
 import java.awt.image.BufferedImage;
+import java.io.IOException;
+import java.io.ObjectInputStream;
 import java.io.Serializable;
 
 public class Pet extends GameObject implements Serializable {
+    //Max variables
     private final int MAX_HEALTH = 100;
     private final int MAX_FULL = 100;
     private final int MAX_ENJOYMENT = 100;
     private final int INITIAL_EXP = 10;
 
+    //Moods
     public static final int DEFAULT = 0;
     public static final int HAPPY = 1;
     public static final int MAD = 2;
 
+    //Make animation transient because Animation class is not serializable
     private transient Animation animation;
 
     //health
@@ -30,14 +35,14 @@ public class Pet extends GameObject implements Serializable {
     private int enjoyment;
 
     //experience. amount of exp to level-up increases by *1.5 every level.
-    //
     private int exp;
     private double maxexp;
     private int lvl; // peneggdf lv1 ~ lv3, peneggshake lv4, penbabydf lv5 ~ lv9, penadol lv10 ~
 
+    //if pet is following the mouse
     private boolean follow;
 
-
+    //initialize the pet based on level
     public Pet(int lvl) {
         this.health = MAX_HEALTH * (lvl / 10);
         this.full = MAX_FULL * (lvl / 10);
@@ -50,25 +55,22 @@ public class Pet extends GameObject implements Serializable {
 
     public void setAnimation(int mood) {
         BufferedImage fullImg;
-        int width = 300;
-        this.width = width;
-        int height = 300;
-        this.height = height;
+        width = height = 300;
         int row = 1;
         int col = 2;
         BufferedImage[] frames = new BufferedImage[row * col];
         if (mood == DEFAULT) {
-            fullImg = ImageUtil.loadBufferedImage("/assets/penbabydf.png");
+            fullImg = ImageUtil.loadBufferedImage("/assets/sprites/penbabydf.png");
             for (int j = 0; j < col; j++) {
                 frames[j] = fullImg.getSubimage(j * width, 0, width, height);
             }
         } else if (mood == HAPPY) {
-            fullImg = ImageUtil.loadBufferedImage("/assets/penbabyhappy.png");
+            fullImg = ImageUtil.loadBufferedImage("/assets/sprites/penbabyhappy.png");
             for (int j = 0; j < col; j++) {
                 frames[j] = fullImg.getSubimage(j * width, 0, width, height);
             }
         } else if (mood == MAD) {
-            fullImg = ImageUtil.loadBufferedImage("/assets/penbabymad.png");
+            fullImg = ImageUtil.loadBufferedImage("/assets/sprites/penbabymad.png");
             for (int j = 0; j < col; j++) {
                 frames[j] = fullImg.getSubimage(j * width, 0, width, height);
             }
@@ -78,7 +80,7 @@ public class Pet extends GameObject implements Serializable {
     }
 
     public void feed(Food food) {
-        if(food.getQuality() < 20) {
+        if (food.getQuality() < 20) {
             setAnimation(MAD);
         } else if (food.getQuality() > 20 && food.getQuality() < 70) {
             setAnimation(DEFAULT);
@@ -96,7 +98,9 @@ public class Pet extends GameObject implements Serializable {
     @Override
     public void update() {
         animation.update();
-        if(follow) {
+        lastX = x;
+        lastY = y;
+        if (follow) {
             if (x < Mouse.x) {
                 x += 2;
             }
@@ -126,6 +130,16 @@ public class Pet extends GameObject implements Serializable {
     @Override
     public void draw(Graphics2D g, float interpolation) {
         BufferedImage img = animation.getImage();
-        g.drawImage(img, (int) x - (img.getWidth() / 2), (int) y - (img.getHeight() / 2), img.getWidth(), img.getHeight(), null);
+        int interpolatedY = (int) ((this.y - lastY) * interpolation + this.lastY - height / 2);
+        int interpolatedX = (int) ((this.x - lastX) * interpolation + this.lastX - width / 2);
+        g.drawImage(img, interpolatedX, interpolatedY, img.getWidth(), img.getHeight(), null);
+    }
+
+    /**
+     * Make our own readObject when de-serializing the save file because the Animation class is transient
+     */
+    private void readObject(ObjectInputStream in) throws IOException, ClassNotFoundException {
+        in.defaultReadObject();
+        animation = new Animation();
     }
 }
