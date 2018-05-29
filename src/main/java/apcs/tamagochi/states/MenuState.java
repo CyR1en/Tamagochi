@@ -38,7 +38,7 @@ public class MenuState extends GameState {
     // initialize all the instance variables
     public void init() {
         //initialize the background music
-        backgroundMusic = new SoundClip("/sounds/bg-music.wav", Clip.LOOP_CONTINUOUSLY);
+        backgroundMusic = new SoundClip("/sounds/bg-music2.wav", Clip.LOOP_CONTINUOUSLY);
         backgroundMusic.setVolume(0.15f);
 
         //initialize the title.
