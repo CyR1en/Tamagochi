@@ -16,7 +16,7 @@ repositories {
 }
 
 dependencies {
-    compile 'com.github.CyR1en:CGDL:1.14-SNAPSHOT'
+    compile group: 'com.github.CyR1en', name: 'CGDL', version: '2b5f81886a'
 }
 
 jar {
