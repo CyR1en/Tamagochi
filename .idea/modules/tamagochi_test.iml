@@ -9,5 +9,4 @@
     <orderEntry type="module" module-name="tamagochi_main" />
     <orderEntry type="library" name="Gradle: com.github.CyR1en:CGDL:1.14-SNAPSHOT" level="project" />
   </component>
-  <component name="TestModuleProperties" production-module="tamagochi_main" />
 </module>

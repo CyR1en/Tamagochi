@@ -64,7 +64,7 @@ public class Pet extends GameObject implements Serializable {
         scheduler.scheduleAtFixedRate(() -> {
             fullDecay();
             enjoymentDecay();
-        }, 0, 10, TimeUnit.SECONDS);
+        }, 0, 7, TimeUnit.SECONDS);
     }
 
     public void setAnimation(int mood) {
@@ -96,7 +96,7 @@ public class Pet extends GameObject implements Serializable {
             width = 320;
             height = 400;
             row = 1;
-            col = 13;
+            col = 14;
             frames = new BufferedImage[row * col];
             fullImg = ImageUtil.loadBufferedImage("/assets/sprites/penhatch.png");
             for (int j = 0; j < col; j++) {
@@ -124,22 +124,23 @@ public class Pet extends GameObject implements Serializable {
                 }
             }
         } else if (lvl > 9) {
-            width = height = 300;
+            width = 300;
+            height = 350;
             row = 1;
             col = 2;
             frames = new BufferedImage[row * col];
             if (mood == DEFAULT) {
-                fullImg = ImageUtil.loadBufferedImage("/assets/sprites/penbabydf.png");
+                fullImg = ImageUtil.loadBufferedImage("/assets/sprites/penadoldf.png");
                 for (int j = 0; j < col; j++) {
                     frames[j] = fullImg.getSubimage(j * width, 0, width, height);
                 }
             } else if (mood == HAPPY) {
-                fullImg = ImageUtil.loadBufferedImage("/assets/sprites/penbabyhappy.png");
+                fullImg = ImageUtil.loadBufferedImage("/assets/sprites/penadolhappy.png");
                 for (int j = 0; j < col; j++) {
                     frames[j] = fullImg.getSubimage(j * width, 0, width, height);
                 }
             } else if (mood == MAD) {
-                fullImg = ImageUtil.loadBufferedImage("/assets/sprites/penbabymad.png");
+                fullImg = ImageUtil.loadBufferedImage("/assets/sprites/penadolmad.png");
                 for (int j = 0; j < col; j++) {
                     frames[j] = fullImg.getSubimage(j * width, 0, width, height);
                 }
@@ -180,6 +181,13 @@ public class Pet extends GameObject implements Serializable {
                 full = MAX_FULL;
             }
         }
+
+        if( lvl == 4 )
+            setAnimation(DEFAULT);
+        else if( lvl == 5 && !hatched)
+            setAnimation(DEFAULT);
+        else if( lvl == 10 )
+            setAnimation(DEFAULT);
     }
 
     public void play() {
@@ -187,6 +195,9 @@ public class Pet extends GameObject implements Serializable {
         if (!(enjoyment >= MAX_ENJOYMENT)) {
             enjoyment += ((int) (Math.random() * 20) + 1) * Math.pow(1.5, lvl - 1);
             exp += ((int) (Math.random() * 3) + 1) * Math.pow(1.5, lvl - 1);
+            full -= (int)(Math.random() * 10 + 1);
+            if( full < 1)
+                full = 0;
             if (enjoyment < MAX_ENJOYMENT) {
                 health++;
                 if (health > MAX_HEALTH) {
@@ -201,6 +212,13 @@ public class Pet extends GameObject implements Serializable {
                 maxexp = INITIAL_EXP * Math.pow(1.5, lvl - 1);
             }
         }
+        setAnimation(HAPPY);
+        if( lvl == 4 )
+            setAnimation(DEFAULT);
+        else if( lvl == 5 && !hatched)
+            setAnimation(DEFAULT);
+        else if( lvl == 10 )
+            setAnimation(DEFAULT);
     }
 
 
@@ -210,14 +228,40 @@ public class Pet extends GameObject implements Serializable {
             if (health < 1) {
                 health = 0;
                 if (!isDead) {
-                    BufferedImage fullImg = ImageUtil.loadBufferedImage("/assets/sprites/pendead.png");
-                    width = height = 300;
-                    int row = 1;
-                    int col = 2;
-                    BufferedImage[] frames = new BufferedImage[row * col];
-                    for (int j = 0; j < col; j++) {
-                        frames[j] = fullImg.getSubimage(j * width, 0, width, height);
+                    BufferedImage[] frames;
+                    if( lvl < 5) {
+                        BufferedImage fullmg = ImageUtil.loadBufferedImage("/assets/sprites/peneggdead.png");
+                        width = 320;
+                        height = 300;
+                        int row = 1;
+                        int col = 2;
+                        frames = new BufferedImage[row * col];
+                        for( int j = 0; j < col; j++) {
+                            frames[j] = fullmg.getSubimage(j* width, 0, width, height);
+                        }
                     }
+                    else if( lvl > 4 && lvl < 10) {
+                        BufferedImage fullImg = ImageUtil.loadBufferedImage("/assets/sprites/pendead.png");
+                        width = height = 300;
+                        int row = 1;
+                        int col = 2;
+                        frames = new BufferedImage[row * col];
+                        for (int j = 0; j < col; j++) {
+                            frames[j] = fullImg.getSubimage(j * width, 0, width, height);
+                        }
+                    }
+
+                    else {
+                            BufferedImage fullImg = ImageUtil.loadBufferedImage("/assets/sprites/penadoldead.png");
+                            width = 300;
+                            height = 350;
+                            int row = 1;
+                            int col = 2;
+                            frames = new BufferedImage[row * col];
+                            for (int j = 0; j < col; j++) {
+                                frames[j] = fullImg.getSubimage(j * width, 0, width, height);
+                            }
+                        }
                     animation.setFrames(frames);
                     isDead = true;
                 }
@@ -235,13 +279,39 @@ public class Pet extends GameObject implements Serializable {
             if (health < 1) {
                 health = 0;
                 if (!isDead) {
-                    BufferedImage fullImg = ImageUtil.loadBufferedImage("/assets/sprites/pendead.png");
-                    width = height = 300;
-                    int row = 1;
-                    int col = 2;
-                    BufferedImage[] frames = new BufferedImage[row * col];
-                    for (int j = 0; j < col; j++) {
-                        frames[j] = fullImg.getSubimage(j * width, 0, width, height);
+                    BufferedImage[] frames;
+                    if( lvl < 5) {
+                        BufferedImage fullImg = ImageUtil.loadBufferedImage("/assets/sprites/peneggdead.png");
+                        width = 320;
+                        height = 300;
+                        int row = 1;
+                        int col = 2;
+                        frames = new BufferedImage[row * col];
+                        for( int j = 0; j < col; j++) {
+                            frames[j] = fullImg.getSubimage(j * width, 0, width, height);
+                        }
+                    }
+                    else if( lvl > 4 && lvl < 10) {
+                        BufferedImage fullImg = ImageUtil.loadBufferedImage("/assets/sprites/pendead.png");
+                        width = height = 300;
+                        int row = 1;
+                        int col = 2;
+                        frames = new BufferedImage[row * col];
+                        for (int j = 0; j < col; j++) {
+                            frames[j] = fullImg.getSubimage(j * width, 0, width, height);
+                        }
+                    }
+
+                    else {
+                        BufferedImage fullImg = ImageUtil.loadBufferedImage("/assets/sprites/penadoldead.png");
+                        width = 300;
+                        height = 350;
+                        int row = 1;
+                        int col = 2;
+                        frames = new BufferedImage[row * col];
+                        for (int j = 0; j < col; j++) {
+                            frames[j] = fullImg.getSubimage(j * width, 0, width, height);
+                        }
                     }
                     animation.setFrames(frames);
                     isDead = true;
@@ -249,6 +319,7 @@ public class Pet extends GameObject implements Serializable {
             }
         } else {
             enjoyment = enjoyment - (int) (Math.random() * 25 + 1);
+
             if (enjoyment < 0)
                 enjoyment = 0;
         }
@@ -264,7 +335,7 @@ public class Pet extends GameObject implements Serializable {
     public void update() {
         animation.update();
         if (lvl == 5 && !hatched) {
-            if (animation.getFrame() >= 12) {
+            if (animation.getFrame() >= 13) {
                 System.out.println("switching");
                 BufferedImage fullImg = ImageUtil.loadBufferedImage("/assets/sprites/penbabydf.png");
                 width = height = 300;
@@ -276,6 +347,17 @@ public class Pet extends GameObject implements Serializable {
                 }
                 animation.setFrames(frames);
                 hatched = true;
+            }
+        }
+        if(lvl == 10) {
+            BufferedImage fullImg = ImageUtil.loadBufferedImage("/assets/sprites/penadoldf.png");
+            width = 300;
+            height = 350;
+            int row = 1;
+            int col = 2;
+            BufferedImage[] frames = new BufferedImage[row * col];
+            for( int j = 0; j < col; j++ ) {
+                frames[j] = fullImg.getSubimage(j * width, 0, width, height);
             }
         }
         lastX = x;

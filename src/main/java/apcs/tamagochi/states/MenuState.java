@@ -43,7 +43,7 @@ public class MenuState extends GameState {
         loader = new Loader();
         //initialize the background music
         backgroundMusic = new SoundClip("/sounds/bg-music.wav", Clip.LOOP_CONTINUOUSLY);
-        backgroundMusic.setVolume(0.15f);
+        backgroundMusic.setVolume(1.0f);
 
         //initialize the title.
         title = new Title("T O M O G U C C I", new Font("Cute Cartoon", Font.BOLD, 70));

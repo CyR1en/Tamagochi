@@ -12,6 +12,7 @@ import com.cyr1en.cgdl.GameState.GameStateManager;
 import com.cyr1en.cgdl.GameState.Transition;
 import com.cyr1en.cgdl.Handlers.Keys;
 import com.cyr1en.cgdl.Main.GamePanel;
+import com.cyr1en.cgdl.util.FontUtil;
 import com.cyr1en.cgdl.util.SerializationUtil;
 
 import javax.sound.sampled.Clip;
@@ -44,7 +45,7 @@ public class PlayingState extends GameState {
     @Override
     public void init() {
         backgroundMusic = new SoundClip("/sounds/bg-music2.wav", Clip.LOOP_CONTINUOUSLY);
-        backgroundMusic.setVolume(0.10f);
+        backgroundMusic.setVolume(1.0f);
         backgroundMusic.start();
 
         background = new BackGround("/assets/defaultbg.png");
@@ -134,6 +135,8 @@ public class PlayingState extends GameState {
         int x = 10;
         int y = 60;
         int offset = 32;
+
+        FontUtil.registerFont("/fonts/Summer's Victory Over Spring - TTF.ttf");
         g.setFont(new Font("Summers Victory Over Spring", Font.BOLD, 30));
         g.setColor(new Color(0, 0, 0));
         g.drawString("Health: " + pet.getHealth(), x, y);
@@ -142,6 +145,7 @@ public class PlayingState extends GameState {
         g.drawString("Exp: " + pet.getExp() + "/" + pet.getMaxexp(), x, y + (offset * 3));
         g.drawString("Lvl: " + pet.getLvl(), x, y + (offset * 4));
         if (pet.isDead()) {
+            FontUtil.registerFont("/fonts/youmurdererbb_reg.ttf");
             g.setFont(new Font("YouMurderer BB", Font.BOLD, 80));
             g.setColor(new Color(176, 0, 3));
             int length = (int) g.getFontMetrics().getStringBounds("You Ded!", g).getWidth();
